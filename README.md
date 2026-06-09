@@ -22,6 +22,14 @@
 | 12 | [可观测性](./docs/12-observability.md) | Prometheus / Grafana / ELK |
 | 13 | [微服务安全](./docs/13-security.md) | JWT / OAuth2 |
 | 14 | [最佳实践与总结](./docs/14-best-practices.md) | 架构全景 / 反模式 |
+| 15 | [服务网格与 Istio](./docs/15-service-mesh.md) | Service Mesh |
+| 16 | [事件驱动架构](./docs/16-event-driven-architecture.md) | EDA / Event Sourcing |
+| 17 | [API 设计与版本化](./docs/17-api-design-versioning.md) | RESTful / OpenAPI |
+| 18 | [微服务测试策略](./docs/18-testing-microservices.md) | 单元 / 契约 / E2E |
+| 19 | [数据库模式](./docs/19-database-patterns.md) | CQRS / 分片 |
+| 20 | [BFF 与 API 聚合](./docs/20-bff-api-aggregation.md) | GraphQL / 聚合模式 |
+| 21 | [云原生设计模式](./docs/21-cloud-native-patterns.md) | Sidecar / 健康检查 |
+| 22 | [生产就绪检查清单](./docs/22-production-readiness.md) | 70 项检查 |
 
 ## 代码示例项目
 

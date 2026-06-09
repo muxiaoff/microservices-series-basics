@@ -28,6 +28,16 @@
 13. [微服务安全](./13-security.md)
 14. [最佳实践与总结](./14-best-practices.md)
 
+### 进阶篇
+15. [服务网格与 Istio](./15-service-mesh.md)
+16. [事件驱动架构](./16-event-driven-architecture.md)
+17. [API 设计与版本化](./17-api-design-versioning.md)
+18. [微服务测试策略](./18-testing-microservices.md)
+19. [数据库模式：CQRS、Event Sourcing 与分片](./19-database-patterns.md)
+20. [BFF 模式与 API 聚合](./20-bff-api-aggregation.md)
+21. [云原生设计模式](./21-cloud-native-patterns.md)
+22. [生产就绪检查清单](./22-production-readiness.md)
+
 ## 配套代码
 
 本系列文章配套的代码示例项目位于项目根目录，结构如下：
