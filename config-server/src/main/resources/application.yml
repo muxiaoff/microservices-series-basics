@@ -1,0 +1,27 @@
+server:
+  port: 8888
+
+spring:
+  application:
+    name: config-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/your-org/microservices-config.git
+          search-paths: '{application}'
+          default-label: main
+        # For local development, use native filesystem
+        native:
+          search-locations: classpath:/config
+
+  # Use native profile for local development
+  profiles:
+    active: native
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true
