@@ -49,8 +49,8 @@ microservices-series-basics/
 
 ## 技术栈
 
-- Java 21 + Spring Boot 3.2+
-- Spring Cloud 2023.x
+- Java 21 + Spring Boot 3.5+
+- Spring Cloud 2025.x
 - Spring Cloud Alibaba
 - Docker + Kubernetes
 - MySQL + Redis + RabbitMQ
