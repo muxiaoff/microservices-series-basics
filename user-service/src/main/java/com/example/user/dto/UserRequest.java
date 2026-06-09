@@ -23,6 +23,3 @@ public class UserRequest {
 
     private String email;
 }
-public class UserRequest {
-    
-}

@@ -47,6 +47,3 @@ public class RequestLoggingFilter implements GlobalFilter, Ordered {
         return -2; // Run before auth filter
     }
 }
-public class RequestLoggingFilter {
-    
-}

@@ -49,6 +49,3 @@ public class OrderController {
         return orderService.cancelOrder(id);
     }
 }
-public class OrderController {
-    
-}

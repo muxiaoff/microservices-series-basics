@@ -34,6 +34,7 @@
         <spring-cloud.version>2025.0.0</spring-cloud.version>
         <spring-cloud-alibaba.version>2025.0.0.0</spring-cloud-alibaba.version>
         <mybatis-plus.version>3.5.9</mybatis-plus.version>
+        <mybatis-plus-join.version>1.5.2</mybatis-plus-join.version>
         <resilience4j.version>2.3.0</resilience4j.version>
         <mapstruct.version>1.6.3</mapstruct.version>
         <hutool.version>5.8.34</hutool.version>
@@ -71,6 +72,13 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <!-- MyBatis Plus Join (multi-table join queries) -->
+            <dependency>
+                <groupId>com.github.yulichang</groupId>
+                <artifactId>mybatis-plus-join-boot-starter</artifactId>
+                <version>${mybatis-plus-join.version}</version>
             </dependency>
 
             <!-- Resilience4j -->

@@ -25,6 +25,3 @@ public class ProductRequest {
 
     private String category;
 }
-public class ProductRequest {
-    
-}

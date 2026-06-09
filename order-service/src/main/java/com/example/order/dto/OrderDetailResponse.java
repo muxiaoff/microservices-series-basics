@@ -21,6 +21,3 @@ public class OrderDetailResponse {
     private String status;
     private LocalDateTime createdAt;
 }
-public class OrderDetailResponse {
-    
-}

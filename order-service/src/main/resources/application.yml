@@ -42,12 +42,65 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics
+        include: health,info,metrics,circuitbreakers
   endpoint:
     health:
       show-details: always
+  tracing:
+    sampling:
+      probability: 1.0   # 100% for dev; use 0.1 in production
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+
+# Resilience4j configuration
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: 10
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        slow-call-rate-threshold: 80
+        slow-call-duration-threshold: 3s
+        wait-duration-in-open-state: 30s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+    instances:
+      user-service:
+        base-config: default
+        failure-rate-threshold: 60
+      product-service:
+        base-config: default
+        wait-duration-in-open-state: 20s
+  retry:
+    configs:
+      default:
+        max-attempts: 3
+        wait-duration: 500ms
+        retry-exceptions:
+          - java.io.IOException
+          - feign.RetryableException
+    instances:
+      user-service:
+        base-config: default
+        max-attempts: 2
+      product-service:
+        base-config: default
+  ratelimiter:
+    configs:
+      default:
+        limit-for-period: 20
+        limit-refresh-period: 1s
+        timeout-duration: 0
+    instances:
+      create-order:
+        limit-for-period: 10
+        limit-refresh-period: 1s
 
 logging:
   level:
     com.example.order: DEBUG
     org.hibernate.SQL: DEBUG
+    io.github.resilience4j: DEBUG

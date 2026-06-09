@@ -17,6 +17,3 @@ public class UserResponse {
     private String role;
     private LocalDateTime createdAt;
 }
-public class UserResponse {
-    
-}

@@ -59,6 +59,3 @@ public class ProductController {
         return productService.deductStock(id, quantity);
     }
 }
-public class ProductController {
-    
-}

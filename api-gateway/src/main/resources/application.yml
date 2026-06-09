@@ -61,6 +61,17 @@ management:
   endpoint:
     health:
       show-details: always
+  tracing:
+    sampling:
+      probability: 1.0
+  zipkin:
+    tracing:
+      endpoint: http://localhost:9411/api/v2/spans
+
+# JWT configuration
+jwt:
+  secret: microservices-demo-secret-key-must-be-at-least-32-chars
+  expiration: 86400000  # 24 hours
 
 logging:
   level:

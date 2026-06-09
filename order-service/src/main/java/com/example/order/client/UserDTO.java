@@ -16,6 +16,3 @@ public class UserDTO {
     private String email;
     private String role;
 }
-public class UserDTO {
-    
-}

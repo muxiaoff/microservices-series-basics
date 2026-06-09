@@ -48,8 +48,11 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - SERVER_PORT=8081
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
     depends_on:
       eureka-server:
+        condition: service_healthy
+      zipkin:
         condition: service_healthy
 
   # ====== Order Service ======
@@ -65,11 +68,14 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - SERVER_PORT=8082
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
     depends_on:
       eureka-server:
         condition: service_healthy
       user-service:
         condition: service_started
+      zipkin:
+        condition: service_healthy
 
   # ====== Product Service ======
   product-service:
@@ -84,8 +90,11 @@ services:
       - SPRING_PROFILES_ACTIVE=docker
       - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://eureka-server:8761/eureka/
       - SERVER_PORT=8083
+      - MANAGEMENT_ZIPKIN_TRACING_ENDPOINT=http://zipkin:9411/api/v2/spans
     depends_on:
       eureka-server:
+        condition: service_healthy
+      zipkin:
         condition: service_healthy
 
   # ====== Config Server ======
@@ -103,3 +112,16 @@ services:
     depends_on:
       eureka-server:
         condition: service_healthy
+
+  # ====== Zipkin (Distributed Tracing) ======
+  zipkin:
+    image: openzipkin/zipkin:latest
+    ports:
+      - "9411:9411"
+    environment:
+      - STORAGE_TYPE=mem
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9411/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5

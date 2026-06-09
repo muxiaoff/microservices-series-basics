@@ -38,6 +38,11 @@
 21. [云原生设计模式](./21-cloud-native-patterns.md)
 22. [生产就绪检查清单](./22-production-readiness.md)
 
+### 专题篇
+23. [多租户架构](./23-multi-tenancy.md)
+24. [微服务性能优化](./24-performance-optimization.md)
+25. [微服务治理](./25-service-governance.md)
+
 ## 配套代码
 
 本系列文章配套的代码示例项目位于项目根目录，结构如下：

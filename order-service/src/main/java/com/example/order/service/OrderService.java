@@ -9,6 +9,9 @@ import com.example.order.dto.OrderDetailResponse;
 import com.example.order.dto.OrderRequest;
 import com.example.order.entity.Order;
 import com.example.order.repository.OrderRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
+import io.github.resilience4j.retry.annotation.Retry;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -27,15 +30,10 @@ public class OrderService {
     private final ProductClient productClient;
 
     @Transactional
+    @RateLimiter(name = "create-order", fallbackMethod = "createOrderRateLimitFallback")
     public Order createOrder(OrderRequest request) {
-        // Fetch product info via Feign
-        ProductDTO product;
-        try {
-            product = productClient.getProductById(request.getProductId());
-        } catch (Exception e) {
-            log.error("Failed to fetch product: {}", e.getMessage());
-            throw new BusinessException(503, "Product service unavailable");
-        }
+        // Fetch product info via Feign (with circuit breaker)
+        ProductDTO product = getProduct(request.getProductId());
 
         // Calculate total price
         BigDecimal totalPrice = product.getPrice()
@@ -59,25 +57,70 @@ public class OrderService {
     }
 
     /**
+     * Rate limiter fallback for createOrder
+     */
+    public Order createOrderRateLimitFallback(OrderRequest request, Exception e) {
+        log.warn("Rate limit triggered for createOrder: {}", e.getMessage());
+        throw new BusinessException(429, "System is busy, please try again later");
+    }
+
+    /**
+     * Fetch product with circuit breaker + retry
+     */
+    @CircuitBreaker(name = "product-service", fallbackMethod = "getProductFallback")
+    @Retry(name = "product-service")
+    public ProductDTO getProduct(Long productId) {
+        return productClient.getProductById(productId);
+    }
+
+    /**
+     * Circuit breaker fallback for product service
+     */
+    public ProductDTO getProductFallback(Long productId, Exception e) {
+        log.warn("Product service circuit breaker triggered for productId={}: {}", productId, e.getMessage());
+        throw new BusinessException(503, "Product service unavailable, please try again later");
+    }
+
+    /**
+     * Fetch user with circuit breaker - returns degraded result instead of throwing
+     */
+    @CircuitBreaker(name = "user-service", fallbackMethod = "getUserFallback")
+    @Retry(name = "user-service")
+    public UserDTO getUser(Long userId) {
+        return userClient.getUserById(userId);
+    }
+
+    /**
+     * Circuit breaker fallback for user service - graceful degradation
+     */
+    public UserDTO getUserFallback(Long userId, Exception e) {
+        log.warn("User service circuit breaker triggered for userId={}: {}", userId, e.getMessage());
+        UserDTO fallback = new UserDTO();
+        fallback.setId(userId);
+        fallback.setName("Unknown User");
+        return fallback;
+    }
+
+    /**
      * Get order detail with user and product info (demonstrates Feign client calls)
      */
     public OrderDetailResponse getOrderDetail(Long orderId) {
         Order order = orderRepository.findById(orderId)
             .orElseThrow(() -> new BusinessException(404, "Order not found: " + orderId));
 
-        // Fetch user info via Feign
+        // Fetch user info via Feign (with circuit breaker fallback)
         String userName = "Unknown";
         try {
-            UserDTO user = userClient.getUserById(order.getUserId());
+            UserDTO user = getUser(order.getUserId());
             userName = user.getName();
         } catch (Exception e) {
             log.warn("Failed to fetch user info for userId={}: {}", order.getUserId(), e.getMessage());
         }
 
-        // Fetch product info via Feign
+        // Fetch product info via Feign (with circuit breaker fallback)
         String productName = "Unknown";
         try {
-            ProductDTO product = productClient.getProductById(order.getProductId());
+            ProductDTO product = getProduct(order.getProductId());
             productName = product.getName();
         } catch (Exception e) {
             log.warn("Failed to fetch product info for productId={}: {}", order.getProductId(), e.getMessage());
@@ -124,7 +167,4 @@ public class OrderService {
         log.info("Order cancelled: id={}", id);
         return updated;
     }
-}
-public class OrderService {
-    
 }

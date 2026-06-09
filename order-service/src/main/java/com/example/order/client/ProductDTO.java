@@ -15,6 +15,3 @@ public class ProductDTO {
     private BigDecimal price;
     private Integer stock;
 }
-public class ProductDTO {
-    
-}

@@ -59,6 +59,3 @@ public class Order {
         updatedAt = LocalDateTime.now();
     }
 }
-public class Order {
-    
-}
